@@ -3,7 +3,7 @@ name: Deploy to GitHub Pages
 on:
   push:
     # ⚠️ 修改这里：把 main 改成你的测试分支名
-    branches: [ "test-deploy" ] 
+    branches: [ "main" ] 
 
 permissions:
   contents: read
