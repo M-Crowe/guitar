@@ -11,4 +11,6 @@ export default [
   // ✅ 新增测试路由
   route("test/chords", "modules/catalog/pages/ChordTestPage.tsx"),
 
+  route("test/score", "modules/catalog/pages/ScoreTestPage.tsx"),
+
 ] satisfies RouteConfig;
