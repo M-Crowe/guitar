@@ -8,16 +8,20 @@ import {
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import PauseIcon from '@mui/icons-material/Pause';
+import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted'; // ✅ 新增图标
 
 import { lessonService } from '@/api/lesson.service';
 import Fretboard from '../components/Fretboard';
 import PracticePlayer from '@/modules/player/components/PracticePlayer';
-// ✅ 引入目录组件
-import TableOfContents, { type TocItem } from '../components/TableOfContents';
+// ✅ 引入两个组件：桌面端 TOC 和 手机端 Drawer
+import TableOfContents, { type TocItem, MobileTocDrawer } from '../components/TableOfContents';
 
 export default function LessonDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
+
+  // ✅ 手机端目录开关状态
+  const [mobileTocOpen, setMobileTocOpen] = useState(false);
 
   const { data: lesson, isLoading } = useQuery({
     queryKey: ['lesson', id],
@@ -53,7 +57,7 @@ export default function LessonDetail() {
   if (isLoading) return <Box sx={{display:'flex', justifyContent:'center', mt: 10}}><CircularProgress /></Box>;
   if (!lesson) return <Typography sx={{p:4, color:'white'}}>未找到该课程</Typography>;
 
-  // ✅ 1. 生成目录数据
+  // 生成目录数据
   const tocItems: TocItem[] = [];
   lesson.content.forEach((block, index) => {
     if (block.title) {
@@ -70,7 +74,7 @@ export default function LessonDetail() {
         <audio ref={audioRef} src={lesson.etude.audioSrc} preload="none" />
       )}
 
-      {/* 顶部导航 */}
+      {/* 顶部导航 Header */}
       <Box sx={{ 
         p: 2, 
         display: 'flex', 
@@ -78,33 +82,45 @@ export default function LessonDetail() {
         gap: 1,
         position: 'sticky',
         top: 0,
-        zIndex: 10,
-        bgcolor: 'rgba(18, 18, 18, 0.9)', // 增加一点背景色防止透明穿透
+        zIndex: 20, // 提高层级
+        bgcolor: 'rgba(18, 18, 18, 0.9)', 
         backdropFilter: 'blur(10px)',
         borderBottom: '1px solid rgba(255,255,255,0.05)'
       }}>
         <IconButton onClick={() => navigate('/')} edge="start" color="inherit">
           <ArrowBackIcon />
         </IconButton>
+        
         <Breadcrumbs aria-label="breadcrumb" sx={{color: 'text.secondary'}}>
           <MuiLink underline="hover" color="inherit" onClick={() => navigate('/')} sx={{cursor:'pointer'}}>
             首页
           </MuiLink>
           <Typography color="text.primary">第 {lesson.id} 课</Typography>
         </Breadcrumbs>
+
+        {/* 占位符，把后面的按钮推到最右边 */}
+        <Box sx={{ flexGrow: 1 }} />
+
+        {/* ✅ 手机端目录按钮 (仅在小屏显示) */}
+        <IconButton 
+          color="inherit" 
+          onClick={() => setMobileTocOpen(true)}
+          sx={{ display: { xs: 'flex', md: 'none' } }} // md以上隐藏
+        >
+          <FormatListBulletedIcon />
+        </IconButton>
       </Box>
 
-      {/* ✅ 2. 使用 Container xl + Stack 实现左右布局 */}
+      {/* 主体内容 */}
       <Container maxWidth="xl" sx={{ mt: 4 }}>
         <Stack direction="row" spacing={{ md: 6, lg: 8 }} alignItems="flex-start">
           
-          {/* 左侧：目录 (只在桌面显示) */}
+          {/* 💻 左侧：桌面端目录 (在组件内部控制了 xs:none) */}
           <TableOfContents items={tocItems} />
 
-          {/* 右侧：内容区域 (flex: 1 自适应) */}
+          {/* 右侧：内容区域 */}
           <Box sx={{ flex: 1, minWidth: 0 }}>
             
-            {/* 标题区 */}
             <Box sx={{ mb: 6 }}>
               <Typography variant="h4" color="primary.main" fontWeight="bold">{lesson.title}</Typography>
               <Typography variant="h6" color="text.secondary" gutterBottom>{lesson.subtitle}</Typography>
@@ -113,17 +129,12 @@ export default function LessonDetail() {
               </Typography>
             </Box>
 
-            {/* 内容循环 */}
             {lesson.content.map((block, index) => (
               <Box 
                 key={index} 
-                id={`section-${index}`} // ✅ 关键：添加锚点 ID
-                sx={{ 
-                  mb: 6, 
-                  scrollMarginTop: '100px' // 这一行配合 window.scrollTo 计算，防止被 header 遮挡
-                }}
+                id={`section-${index}`} 
+                sx={{ mb: 6, scrollMarginTop: '100px' }}
               >
-                {/* 渲染 Text */}
                 {block.type === 'text' && (
                   <Box>
                     {block.title && <Typography variant="h6" color="white" gutterBottom>{block.title}</Typography>}
@@ -133,7 +144,6 @@ export default function LessonDetail() {
                   </Box>
                 )}
                 
-                {/* 渲染 Fretboard */}
                 {block.type === 'fretboard' && block.notes && (
                   <Box>
                      {block.title && <Typography variant="h6" color="white" gutterBottom>{block.title}</Typography>}
@@ -143,10 +153,9 @@ export default function LessonDetail() {
               </Box>
             ))}
 
-            {/* 实战练习 */}
             {lesson.etude && (
               <Box 
-                id="section-etude" // ✅ 关键：实战练习锚点
+                id="section-etude"
                 sx={{ mt: 8, pt: 4, borderTop: '1px dashed rgba(255,255,255,0.1)', scrollMarginTop: '100px' }}
               >
                 <Typography variant="h5" color="primary.main" gutterBottom>
@@ -166,25 +175,29 @@ export default function LessonDetail() {
         </Stack>
       </Container>
 
-      {/* 悬浮播放按钮 */}
-      {lesson.etude?.audioSrc && (
-        <Fab 
-          color="primary" 
-          variant="extended" 
-          sx={{ 
-            position: 'fixed', 
-            bottom: 32, 
-            right: 32,
-            zIndex: 100,
-            bgcolor: isPlayingAudio ? 'secondary.main' : 'primary.main',
-            color: isPlayingAudio ? 'secondary.contrastText' : 'primary.contrastText'
-          }}
-          onClick={toggleAudio}
-        >
-          {isPlayingAudio ? <PauseIcon sx={{ mr: 1 }} /> : <PlayArrowIcon sx={{ mr: 1 }} />}
-          {isPlayingAudio ? "暂停伴奏" : "播放伴奏"}
-        </Fab>
-      )}
+      {/* ✅ 手机端目录抽屉 (挂载在这里) */}
+      <MobileTocDrawer 
+        items={tocItems} 
+        open={mobileTocOpen} 
+        onClose={() => setMobileTocOpen(false)} 
+      />
+
+      <Fab 
+        color="primary" 
+        variant="extended" 
+        sx={{ 
+          position: 'fixed', 
+          bottom: 32, 
+          right: 32,
+          zIndex: 100,
+          bgcolor: isPlayingAudio ? 'secondary.main' : 'primary.main',
+          color: isPlayingAudio ? 'secondary.contrastText' : 'primary.contrastText'
+        }}
+        onClick={toggleAudio}
+      >
+        {isPlayingAudio ? <PauseIcon sx={{ mr: 1 }} /> : <PlayArrowIcon sx={{ mr: 1 }} />}
+        {isPlayingAudio ? "暂停伴奏" : "播放伴奏"}
+      </Fab>
 
       <Snackbar open={audioError} autoHideDuration={6000} onClose={() => setAudioError(false)}>
         <Alert severity="error" sx={{ width: '100%' }}>

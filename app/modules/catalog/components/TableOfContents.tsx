@@ -1,75 +1,158 @@
 import { useEffect, useState } from 'react';
-import { Box, Typography, List, ListItemButton, ListItemText, Paper, useTheme, alpha } from '@mui/material';
+import { Box, Typography, List, ListItemButton, ListItemText, Paper, useTheme, alpha, Drawer, IconButton } from '@mui/material';
 import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
+import CloseIcon from '@mui/icons-material/Close';
 
 export interface TocItem {
   title: string;
   targetId: string;
 }
 
+// --- 桌面端组件 Props ---
 interface TableOfContentsProps {
   items: TocItem[];
   onLinkClick?: () => void;
 }
 
+// --- 手机端组件 Props ---
+interface MobileTocDrawerProps {
+  items: TocItem[];
+  open: boolean;
+  onClose: () => void;
+}
+
+// ============================================================================
+// 📱 手机端组件: MobileTocDrawer (新增)
+// ============================================================================
+export function MobileTocDrawer({ items, open, onClose }: MobileTocDrawerProps) {
+  const theme = useTheme();
+  const [activeId, setActiveId] = useState<string>(items.length > 0 ? items[0].targetId : "");
+
+  // 复用滚动监听逻辑，确保打开菜单时能看到当前在哪一章
+  useEffect(() => {
+    if (!open) return; // 只有打开时才计算，节省性能
+
+    const calculateActive = () => {
+      let current = "";
+      for (const item of items) {
+        const section = document.getElementById(item.targetId);
+        if (section && window.scrollY >= (section.offsetTop - 180)) {
+          current = item.targetId;
+        }
+      }
+      if (current) setActiveId(current);
+      else if (window.scrollY < 100 && items.length > 0) setActiveId(items[0].targetId);
+    };
+
+    calculateActive();
+  }, [open, items]);
+
+  const handleClick = (id: string) => {
+    const element = document.getElementById(id);
+    if (element) {
+      const headerOffset = 100;
+      const elementPosition = element.getBoundingClientRect().top;
+      const offsetPosition = elementPosition + window.scrollY - headerOffset;
+
+      window.scrollTo({ top: offsetPosition, behavior: "smooth" });
+      
+      onClose(); // 点击后关闭抽屉
+    }
+  };
+
+  return (
+    <Drawer
+      anchor="bottom"
+      open={open}
+      onClose={onClose}
+      PaperProps={{
+        sx: {
+          borderTopLeftRadius: 16,
+          borderTopRightRadius: 16,
+          bgcolor: 'rgba(30, 30, 35, 0.95)', // 深色磨砂背景
+          backdropFilter: 'blur(12px)',
+          borderTop: '1px solid rgba(255,255,255,0.1)',
+          maxHeight: '70vh' // 最多占屏幕 70%
+        }
+      }}
+    >
+      {/* 抽屉顶部标题栏 */}
+      <Box sx={{ p: 2, display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, color: 'text.secondary' }}>
+          <FormatListBulletedIcon fontSize="small" />
+          <Typography variant="subtitle1" fontWeight="bold">课程目录</Typography>
+        </Box>
+        <IconButton onClick={onClose} size="small">
+          <CloseIcon />
+        </IconButton>
+      </Box>
+
+      {/* 目录列表 */}
+      <List sx={{ pt: 0, pb: 4 }}>
+        {items.map((item) => {
+          const isActive = activeId === item.targetId;
+          return (
+            <ListItemButton
+              key={item.targetId}
+              onClick={() => handleClick(item.targetId)}
+              sx={{
+                py: 1.5,
+                borderLeft: '4px solid transparent',
+                borderLeftColor: isActive ? 'primary.main' : 'transparent',
+                bgcolor: isActive ? alpha(theme.palette.primary.main, 0.1) : 'transparent',
+                color: isActive ? 'primary.main' : 'text.secondary'
+              }}
+            >
+              <ListItemText 
+                primary={item.title} 
+                primaryTypographyProps={{ 
+                  fontWeight: isActive ? 600 : 400,
+                  fontSize: '0.95rem'
+                }} 
+              />
+            </ListItemButton>
+          );
+        })}
+      </List>
+    </Drawer>
+  );
+}
+
+// ============================================================================
+// 💻 桌面端组件: TableOfContents (保持不变)
+// ============================================================================
 export default function TableOfContents({ items, onLinkClick }: TableOfContentsProps) {
   const theme = useTheme();
-  
-  // 初始化默认选中
   const [activeId, setActiveId] = useState<string>(items.length > 0 ? items[0].targetId : "");
 
   const handleClick = (id: string) => {
     const element = document.getElementById(id);
     if (element) {
-      const headerOffset = 100; // 预留顶部导航栏高度
+      const headerOffset = 100; 
       const elementPosition = element.getBoundingClientRect().top;
       const offsetPosition = elementPosition + window.scrollY - headerOffset;
   
-      // 1. 只负责触发滚动
-      window.scrollTo({
-        top: offsetPosition,
-        behavior: "smooth"
-      });
-      
-      // ❌ 已删除：setActiveId(id); 
-      // 原因：删除这行后，点击时不会强制高亮目标。
-      // 而是让下面的 handleScroll 监听器随着页面滚动，自然地流转到目标章节，彻底解决“闪烁”问题。
-      
-      if (onLinkClick) {
-        onLinkClick();
-      }
+      window.scrollTo({ top: offsetPosition, behavior: "smooth" });
+      setActiveId(id); 
+      if (onLinkClick) onLinkClick();
     }
   };
 
   useEffect(() => {
     const handleScroll = () => {
       let current = "";
-      
-      // 遍历所有章节
       for (const item of items) {
         const section = document.getElementById(item.targetId);
-        // 这里的 180 是判定线。数值越大，滚动时高亮切换得越早。
-        // 配合 handleClick 的 headerOffset=100，确保目标滚动到位后肯定能被选中
         if (section && window.scrollY >= (section.offsetTop - 180)) {
           current = item.targetId;
         }
       }
-
-      // 如果计算出了 current，就设置
-      if (current) {
-        setActiveId(current);
-      } else if (window.scrollY < 100 && items.length > 0) {
-        // 页面回到顶部时，强制高亮第一个
-        setActiveId(items[0].targetId);
-      }
+      if (current) setActiveId(current);
+      else if (window.scrollY < 100 && items.length > 0) setActiveId(items[0].targetId);
     };
 
-    // 绑定滚动事件
     window.addEventListener("scroll", handleScroll);
-    
-    // 组件挂载后立即执行一次，确保初始高亮正确
     setTimeout(handleScroll, 100);
-
     return () => window.removeEventListener("scroll", handleScroll);
   }, [items]); 
 
@@ -81,12 +164,11 @@ export default function TableOfContents({ items, onLinkClick }: TableOfContentsP
       sx={{
         width: 240,
         flexShrink: 0,
-        position: 'sticky', // 固定定位
-        top: 100,           // 距离视口顶部的距离
+        position: 'sticky',
+        top: 100,
         maxHeight: 'calc(100vh - 120px)', 
         overflowY: 'auto',
-        display: { xs: 'none', md: 'block' }, // 仅在电脑端显示
-        // 隐藏滚动条
+        display: { xs: 'none', md: 'block' }, // ⚠️ 关键：只在 md (桌面) 以上显示
         '&::-webkit-scrollbar': { display: 'none' },
         scrollbarWidth: 'none', 
       }}
