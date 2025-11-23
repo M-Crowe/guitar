@@ -4,7 +4,6 @@ import PauseIcon from '@mui/icons-material/Pause';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import MusicNoteIcon from '@mui/icons-material/MusicNote';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess'; // 上箭头
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'; // 下箭头
 import { useNavigate } from 'react-router';
