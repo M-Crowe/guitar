@@ -9,7 +9,15 @@ import {
   Alert 
 } from '@mui/material';
 import { ScoreViewer } from '@/modules/player/components/ScoreViewer';
+const BASE_URL = import.meta.env.BASE_URL;
 
+/**
+ * 路径拼接辅助函数
+ */
+const asset = (path: string) => {
+  const cleanPath = path.startsWith('/') ? path.slice(1) : path;
+  return `${BASE_URL}${cleanPath}`;
+};
 // 示例 AlphaTex：C 大调音阶 (注意：去掉了多余的空格，保持紧凑)
 const DEFAULT_TEX = `\\title "C Major Scale"
 \\tempo 120
@@ -124,7 +132,7 @@ export default function ScoreTestPage() {
           layoutMode="page"
           source={{
             type: 'file',
-            url: '/tabs/blues_rock_tune.gpx' 
+            url: asset('/tabs/k_on-cagayake_girls.gp5') 
           }} 
         />
       </Box>

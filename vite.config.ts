@@ -3,8 +3,6 @@ import { defineConfig } from "vite";
 import tsconfigPaths from "vite-tsconfig-paths";
 import tailwindcss from "@tailwindcss/vite";
 
-// ⚠️ 把这里改成你的 GitHub 仓库名，前后都要加斜杠
-// 如果仓库名是 blues-guitar-app，就是 /blues-guitar-app/
 const REPO_NAME = "/"; 
 
 export default defineConfig({
@@ -12,5 +10,16 @@ export default defineConfig({
   plugins: [tailwindcss(), reactRouter(), tsconfigPaths()],
   optimizeDeps: {
     exclude: ["@coderline/alphatab"],
+  },
+  build: {
+    rollupOptions: {
+      output: {
+        // manualChunks removed to avoid conflict with server build externals
+      },
+    },
+    sourcemap: false,
+  },
+  css: {
+    devSourcemap: false,
   },
 });

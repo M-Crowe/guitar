@@ -1,19 +1,7 @@
 import { useTheme } from '@mui/material';
+import type { Chord, ChordBarre } from '@/types';
 
-// ✅ 新增 Barre (横按) 接口定义
-export interface ChordBarre {
-  fret: number;       // 在第几品横按
-  fromString: number; // 起始弦 (如 5 代表 5弦)
-  toString: number;   // 结束弦 (如 1 代表 1弦)
-}
-
-export interface Chord {
-  name: string;       
-  subtitle?: string;  
-  frets: number[];    
-  fingers?: number[]; 
-  barres?: ChordBarre[]; // ✅ 支持多个横按
-}
+export type { Chord, ChordBarre };
 
 interface ChordDiagramProps {
   chord: Chord;

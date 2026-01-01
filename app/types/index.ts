@@ -1,5 +1,3 @@
-// --- START OF FILE index.ts ---
-
 // 1. 指板音符定义
 export interface Note {
   string: number;
@@ -8,7 +6,7 @@ export interface Note {
   label?: string;
 }
 
-// 2. 和弦相关定义 (新增)
+// 2. 和弦相关定义
 export interface ChordBarre {
   fret: number;
   fromString: number;
@@ -18,45 +16,49 @@ export interface ChordBarre {
 export interface Chord {
   name: string;
   subtitle?: string;
-  frets: number[];    // [6弦, 5弦, ... 1弦]
-  fingers?: number[]; // [6弦, 5弦, ... 1弦]
+  frets: number[];
+  fingers?: number[];
   barres?: ChordBarre[];
 }
 
-// 3. 内容块定义 (扩充)
+// 3. 内容块定义
+export type ContentBlockType = 'text' | 'fretboard' | 'chord-group' | 'score';
+
 export interface ContentBlock {
-  // 新增 'chord-group' 和 'score' 类型
-  type: "text" | "fretboard" | "chord-group" | "score"; 
-  
+  type: ContentBlockType;
   title?: string;
-  
-  // type: "text"
-  text?: string; 
-  
-  // type: "fretboard"
-  notes?: Note[]; 
-  
-  // type: "chord-group" (新增)
-  chords?: Chord[]; 
-  
-  // type: "score" (新增，用于 AlphaTex)
-  alphaTex?: string; 
+  text?: string;
+  notes?: Note[];
+  chords?: Chord[];
+  alphaTex?: string;
 }
 
-// 4. 练习曲与课程定义
+// 4. 课程元数据
+export type DifficultyLevel = 'beginner' | 'intermediate' | 'advanced';
+
+export interface LessonMeta {
+  difficulty: DifficultyLevel;
+  duration?: number; // 预计学习时长（分钟）
+  prerequisites: number[]; // 前置课程 ID
+}
+
+// 5. 练习曲定义
 export interface Etude {
   title: string;
+  description?: string;
   tempo: number;
   audioSrc: string;
   gpFile: string;
 }
 
+// 6. 课程定义
 export interface Lesson {
   id: number;
   title: string;
   subtitle: string;
   description: string;
   tags: string[];
+  meta?: LessonMeta;
   content: ContentBlock[];
   etude?: Etude;
 }

@@ -29,6 +29,9 @@ jobs:
       - name: Build
         run: npm run build
 
+      - name: Create 404.html for GitHub Pages
+        run: cp ./build/client/index.html ./build/client/404.html
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:

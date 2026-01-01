@@ -38,7 +38,7 @@
 
 1.  **克隆仓库:**
     ```sh
-    git clone https://github.com/your-username/blues-guitar-app.git
+    git clone https://github.com/xuanyuslf/guitar.git
     cd blues-guitar-app
     ```
 

@@ -1,0 +1,89 @@
+{
+  "id": 2,
+  "title": "第 2 课",
+  "subtitle": "可移动的五声音阶",
+  "description": "学习如何将指型 1 移动到任意把位，在不同调上演奏布鲁斯。",
+  "tags": ["可移动指型", "A调", "把位"],
+  "meta": {
+    "difficulty": "advanced",
+    "prerequisites": [1]
+  },
+  "content": [
+    {
+      "type": "text",
+      "title": "从空弦到可移动",
+      "text": "在第 1 课中，我们学习了 E 小调五声音阶的空弦指型。现在，我们要学习一个重要概念：可移动指型。\n\n空弦指型的局限在于它只能演奏 E 调。但如果我们把整个指型向上移动，用食指代替空弦，就能在任意调上演奏同样的音阶！\n\n这就是吉他的魔力——一个指型，十二个调。"
+    },
+    {
+      "type": "text",
+      "title": "理解把位",
+      "text": "把位是指你的手在指板上的位置，通常以食指所在的品位来命名。\n\n• 第 1 把位：食指在第 1 品\n• 第 5 把位：食指在第 5 品\n• 第 12 把位：食指在第 12 品\n\n当我们说在第 5 把位演奏 A 小调五声音阶，意思是食指放在第 5 品，演奏以 A 为根音的小调五声音阶。"
+    },
+    {
+      "type": "fretboard",
+      "title": "A 小调五声音阶 - 指型 1 (第 5 把位)",
+      "notes": [
+        { "string": 6, "fret": 5, "root": true, "label": "A" },
+        { "string": 6, "fret": 8, "root": false, "label": "C" },
+        { "string": 5, "fret": 5, "root": false, "label": "D" },
+        { "string": 5, "fret": 7, "root": false, "label": "E" },
+        { "string": 4, "fret": 5, "root": false, "label": "G" },
+        { "string": 4, "fret": 7, "root": true, "label": "A" },
+        { "string": 3, "fret": 5, "root": false, "label": "C" },
+        { "string": 3, "fret": 7, "root": false, "label": "D" },
+        { "string": 2, "fret": 5, "root": false, "label": "E" },
+        { "string": 2, "fret": 8, "root": false, "label": "G" },
+        { "string": 1, "fret": 5, "root": true, "label": "A" },
+        { "string": 1, "fret": 8, "root": false, "label": "C" }
+      ]
+    },
+    {
+      "type": "text",
+      "title": "指法规则",
+      "text": "可移动指型的指法非常规律：\n\n• 食指 (1) - 负责把位的起始品（如第 5 品）\n• 无名指 (3) - 负责高两品的位置（如第 7 品）\n• 小指 (4) - 负责高三品的位置（如第 8 品）\n\n注意：中指在这个指型中很少使用，保持放松即可。\n\n记忆口诀：1-3 为主，4 补高音"
+    },
+    {
+      "type": "score",
+      "title": "A 小调五声音阶练习",
+      "alphaTex": "\\title \"A小调五声音阶\"\n\\tempo 80\n.\n:4 5.6 8.6 5.5 7.5 | 5.4 7.4 5.3 7.3 | 5.2 8.2 5.1 8.1 |\n8.1 5.1 8.2 5.2 | 7.3 5.3 7.4 5.4 | 7.5 5.5 8.6 5.6 | :2 5.6"
+    },
+    {
+      "type": "text",
+      "title": "找到任意调的根音",
+      "text": "要在任意调演奏，你需要知道根音在哪里。以下是 6 弦上的音符位置：\n\n• 第 1 品：F\n• 第 3 品：G\n• 第 5 品：A\n• 第 7 品：B\n• 第 8 品：C\n• 第 10 品：D\n• 第 12 品：E（高八度）\n\n快速定位法：记住 A 在第 5 品，然后向上或向下数半音。"
+    },
+    {
+      "type": "chord-group",
+      "title": "A 调新和弦：D7",
+      "chords": [
+        {
+          "name": "D7",
+          "subtitle": "IV7 (下属和弦)",
+          "frets": [-1, -1, 0, 2, 1, 2],
+          "fingers": [0, 0, 0, 2, 1, 3]
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "title": "A 调 vs E 调",
+      "text": "对比两个调的和弦进行：\n\nE 调： E7 (I) - A7 (IV) - B7 (V)\nA 调： A7 (I) - D7 (IV) - E7 (V)\n\n注意到了吗？E7 在 E 调是主和弦，在 A 调却变成了属和弦！A7 在 E 调是下属和弦，在 A 调变成了主和弦！\n\n这就是音乐理论的美妙之处——同一个和弦在不同调中扮演不同角色。A 调只需要新学一个 D7 和弦，其他两个你已经会了。"
+    },
+    {
+      "type": "text",
+      "title": "练习建议",
+      "text": "本周练习计划：\n\n第 1-2 天：\n• A 小调五声音阶上下行，每天 10 分钟\n• 注意保持手型稳定，不要移动把位\n\n第 3-4 天：\n• 练习 A7、D7、E7 和弦转换\n• 目标：每个转换在 2 秒内完成\n\n第 5-7 天：\n• 尝试在 A 调和弦进行上即兴\n• 用音阶中的任意音符，跟着和弦弹"
+    },
+    {
+      "type": "text",
+      "title": "本课小结",
+      "text": "恭喜！你现在掌握了：\n\n• 可移动五声音阶的概念\n• A 小调五声音阶（第 5 把位）\n• 把位的定义和命名\n• 6 弦上的音符位置\n• A 调布鲁斯和弦 (A7-D7-E7)\n\n重要提示：这个指型可以移动到任何把位！试着在 G 调（第 3 把位）和 C 调（第 8 把位）练习。"
+    }
+  ],
+    "etude": {
+    "title": "布鲁斯摇滚曲 (Blues Rock Tune)",
+    "tempo": 120,
+    "audioSrc": "audio/texas_rock.mp3",
+    "gpFile": "tabs/blues_rock_tune.gpx"
+  }
+}

@@ -36,9 +36,8 @@ export const usePlayerStore = create<PlayerState>()(
       setIsLoading: (isLoading) => set({ isLoading }),
     }),
     {
-      name: "blues-player-storage", // localStorage key
+      name: "blues-player-storage",
       storage: createJSONStorage(() => localStorage),
-      // 只持久化这几个字段
       partialize: (state) => ({
         zoom: state.zoom,
         volume: state.volume,

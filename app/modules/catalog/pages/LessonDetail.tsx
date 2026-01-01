@@ -13,24 +13,19 @@ import PauseIcon from '@mui/icons-material/Pause';
 import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
 
 // Types
-import type { Lesson, ContentBlock } from '@/types'; 
-import type { Chord } from '../components/ChordDiagram';
+import type { ContentBlock, Chord } from '@/types';
 
 // API
 import { lessonService } from '@/api/lesson.service';
+
+// Utils
+import { asset } from '@/utils/path';
 
 // Components
 import Fretboard from '../components/Fretboard';
 import ChordDiagram from '../components/ChordDiagram';
 import { ScoreViewer } from '../../player/components/ScoreViewer';
 import TableOfContents, { type TocItem, MobileTocDrawer } from '../components/TableOfContents';
-
-// ✅ 1. 修改这里：扩展本地类型以匹配 service 中的定义
-interface ExtendedContentBlock extends Omit<ContentBlock, 'type'> {
-  type: 'text' | 'fretboard' | 'chord-group' | 'score'; // 修正了类型名称并新增了 score
-  chords?: Chord[];
-  alphaTex?: string;
-}
 
 export default function LessonDetail() {
   const { id } = useParams();
@@ -149,9 +144,7 @@ export default function LessonDetail() {
             </Box>
 
             {/* Content Blocks */}
-            {lesson.content.map((rawBlock, index) => {
-              const block = rawBlock as ExtendedContentBlock;
-
+            {lesson.content.map((block, index) => {
               return (
                 <Box 
                   key={index} 
@@ -176,10 +169,7 @@ export default function LessonDetail() {
                      <Fretboard notes={block.notes} />
                   )}
 
-                  {/* 
-                      ✅ 3. 和弦组渲染 (修复)
-                      旧代码是 block.type === 'chord'，但数据是 'chord-group'
-                  */}
+                  {/* 3. 和弦组渲染 */}
                   {block.type === 'chord-group' && block.chords && (
                     <Paper elevation={0} sx={{ p: 3, bgcolor: 'action.hover', borderRadius: 4 }}>
                       <Grid 
@@ -189,18 +179,15 @@ export default function LessonDetail() {
                         justifyContent="center"
                       >
                         {block.chords.map((chord, cIdx) => (
-                          <Grid item key={cIdx}>
-                            <ChordDiagram chord={chord} />
+                          <Grid key={cIdx}>
+                            <ChordDiagram chord={chord as Chord} />
                           </Grid>
                         ))}
                       </Grid>
                     </Paper>
                   )}
 
-                  {/* 
-                      ✅ 4. 乐谱渲染 (新增)
-                      用于显示 AlphaTex 练习片段
-                  */}
+                  {/* 4. 乐谱渲染 */}
                   {block.type === 'score' && block.alphaTex && (
                      <Box sx={{ 
                        width: '100%', 
@@ -211,8 +198,8 @@ export default function LessonDetail() {
                        borderColor: 'divider'
                      }}>
                        <ScoreViewer 
-                         source={{ type: 'tex', content: block.alphaTex }} // 这种短练习给个固定高度即可
-                         layoutMode="horizontal" // 练习条通常横向显示更好
+                         source={{ type: 'tex', content: block.alphaTex }}
+                         layoutMode="horizontal"
                        />
                      </Box>
                   )}
@@ -238,7 +225,7 @@ export default function LessonDetail() {
                 
                 <Box sx={{ height: 600, width: '100%' }}>
                   <ScoreViewer 
-                    source={{ type: 'file', url: lesson.etude.gpFile }}
+                    source={{ type: 'file', url: asset(lesson.etude.gpFile) }}
                     height="100%"
                     layoutMode="page"
                   />
@@ -265,7 +252,11 @@ export default function LessonDetail() {
           zIndex: 100,
           bgcolor: isPlayingAudio ? 'secondary.main' : 'primary.main',
           color: isPlayingAudio ? 'secondary.contrastText' : 'primary.contrastText',
-          boxShadow: '0 4px 20px rgba(0,0,0,0.3)'
+          boxShadow: '0 4px 20px rgba(0,0,0,0.3)',
+          '&:hover': {
+            bgcolor: isPlayingAudio ? 'secondary.dark' : 'primary.dark',
+            color: isPlayingAudio ? 'secondary.contrastText' : 'primary.contrastText',
+          }
         }}
         onClick={toggleAudio}
       >
