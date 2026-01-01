@@ -38,7 +38,7 @@ export type DifficultyLevel = 'beginner' | 'intermediate' | 'advanced';
 
 export interface LessonMeta {
   difficulty: DifficultyLevel;
-  duration: number; // 预计学习时长（分钟）
+  duration?: number; // 预计学习时长（分钟）
   prerequisites: number[]; // 前置课程 ID
 }
 
