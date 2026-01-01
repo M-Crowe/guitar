@@ -5,8 +5,7 @@
   "description": "学习如何将指型 1 移动到任意把位，在不同调上演奏布鲁斯。",
   "tags": ["可移动指型", "A调", "把位"],
   "meta": {
-    "difficulty": "beginner",
-    "duration": 40,
+    "difficulty": "advanced",
     "prerequisites": [1]
   },
   "content": [
@@ -80,5 +79,11 @@
       "title": "本课小结",
       "text": "恭喜！你现在掌握了：\n\n• 可移动五声音阶的概念\n• A 小调五声音阶（第 5 把位）\n• 把位的定义和命名\n• 6 弦上的音符位置\n• A 调布鲁斯和弦 (A7-D7-E7)\n\n重要提示：这个指型可以移动到任何把位！试着在 G 调（第 3 把位）和 C 调（第 8 把位）练习。"
     }
-  ]
+  ],
+    "etude": {
+    "title": "布鲁斯摇滚曲 (Blues Rock Tune)",
+    "tempo": 120,
+    "audioSrc": "audio/texas_rock.mp3",
+    "gpFile": "tabs/blues_rock_tune.gpx"
+  }
 }

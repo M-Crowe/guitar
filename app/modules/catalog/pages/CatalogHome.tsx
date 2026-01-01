@@ -21,9 +21,9 @@ import { colors } from '@/config/theme';
 import type { DifficultyLevel } from '@/types';
 
 const difficultyConfig: Record<DifficultyLevel, { label: string; color: string }> = {
-  beginner: { label: '入门', color: '#4CAF50' },
-  intermediate: { label: '进阶', color: '#FF9800' },
-  advanced: { label: '高级', color: '#F44336' },
+  beginner: { label: '入门', color: '#9575CD' },
+  intermediate: { label: '进阶', color: '#673AB7' },
+  advanced: { label: '高级', color: '#311B92' },
 };
 
 export default function CatalogHome() {
@@ -200,12 +200,14 @@ export default function CatalogHome() {
                         '& .MuiChip-label': { px: 1 }
                       }}
                     />
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.3 }}>
-                      <AccessTimeIcon sx={{ fontSize: 14, color: 'rgba(255,255,255,0.4)' }} />
-                      <Typography variant="caption" sx={{ color: 'rgba(255,255,255,0.4)' }}>
-                        {lesson.meta.duration}分钟
-                      </Typography>
-                    </Box>
+                    {lesson.meta.duration && (
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.3 }}>
+                        <AccessTimeIcon sx={{ fontSize: 14, color: 'rgba(255,255,255,0.4)' }} />
+                        <Typography variant="caption" sx={{ color: 'rgba(255,255,255,0.4)' }}>
+                          {lesson.meta.duration}分钟
+                        </Typography>
+                      </Box>
+                    )}
                   </Stack>
                 )}
 
